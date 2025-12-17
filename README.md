@@ -4,10 +4,10 @@ Geração automática de **Mapa de Gerenciamento de Riscos (MGR)** para contrata
 
 ## O que ele faz
 
-- Lê `dados.json` (metadados + conteúdo do ETP + conteúdo do TR).
-- Monta um prompt a partir de `prompt_template.txt` (com separador `___SEPARADOR___`).
+- Lê `inputs/dados.json` (metadados + conteúdo do ETP + conteúdo do TR).
+- Monta um prompt a partir de `inputs/prompt_template.txt` (com separador `___SEPARADOR___`).
 - Envia o prompt para um ou mais provedores de IA (com streaming no terminal).
-- Salva a resposta em arquivos `resultado_*.md` e salva o prompt final em `prompt_montado_debug.txt`.
+- Salva o prompt final em `outputs/prompt_montado_debug.txt` e as respostas em `outputs/resultado_*.md`.
 
 ## Requisitos
 
@@ -20,13 +20,13 @@ Geração automática de **Mapa de Gerenciamento de Riscos (MGR)** para contrata
 
 ## Instalação
 
-Crie e ative um ambiente virtual e instale as dependências:
+Crie e ative um ambiente virtual e instale o pacote em modo editável:
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate  # Linux/macOS
 pip install -U pip
-pip install google-generativeai groq openai python-dotenv
+pip install -e .
 ```
 
 No Windows (PowerShell):
@@ -35,12 +35,14 @@ No Windows (PowerShell):
 python -m venv .venv
 .venv\Scripts\Activate.ps1
 pip install -U pip
-pip install google-generativeai groq openai python-dotenv
+pip install -e .
 ```
+
+Alternativa simples (sem instalar o pacote): `pip install -r requirements.txt` e rode com `PYTHONPATH=src`.
 
 ## Configuração do `.env`
 
-Crie um arquivo `.env` na raiz do projeto com as chaves que você tiver:
+Copie `.env.example` para `.env` e preencha as chaves que você tiver:
 
 ```env
 GOOGLE_API_KEY=...
@@ -53,7 +55,7 @@ Você pode configurar só algumas chaves; os scripts pulam provedores sem chave 
 
 ## Entradas do projeto
 
-### `dados.json`
+### `inputs/dados.json`
 
 Estrutura esperada (resumo):
 
@@ -76,7 +78,7 @@ Estrutura esperada (resumo):
 
 Observação: os scripts fazem uma “limpeza” do JSON (removendo algumas chaves como `id`, `created_at` etc.) para reduzir ruído no prompt. A lista está em `CHAVES_IGNORAR` nos arquivos `main_api.py` e `main_openrouter.py`.
 
-### `prompt_template.txt`
+### `inputs/prompt_template.txt`
 
 - Tudo **antes** de `___SEPARADOR___` vira o *SYSTEM prompt*.
 - Tudo **depois** de `___SEPARADOR___` vira o *USER prompt*.
@@ -86,33 +88,54 @@ Observação: os scripts fazem uma “limpeza” do JSON (removendo algumas chav
 
 ## Como executar
 
-### 1) Modo multi-provider (Gemini + Groq + OpenAI)
+### 1) CLI (recomendado)
 
-Roda em sequência e salva um arquivo por provedor:
+Roda Gemini + Groq + OpenAI em sequência:
 
 ```bash
-python main_api.py
+automgr run
 ```
 
 Saídas típicas:
 
-- `prompt_montado_debug.txt`
-- `resultado_gemini.md`
-- `resultado_groq.md`
-- `resultado_gpt4o.md`
+- `outputs/prompt_montado_debug.txt`
+- `outputs/resultado_gemini.md`
+- `outputs/resultado_groq.md`
+- `outputs/resultado_openai.md`
 
-### 2) Modo OpenRouter (menu de modelos)
-
-Mostra um menu (ou opção `todas`) e salva a resposta em `resultado_<modelo>.md`:
+Executa OpenRouter (menu interativo):
 
 ```bash
-python main_openrouter.py
+automgr openrouter
 ```
 
-### 3) Listar modelos do Gemini (opcional)
+Executa OpenRouter direto por slug:
 
 ```bash
-python list_models.py
+automgr openrouter --model deepseek/deepseek-chat
+```
+
+Listar modelos do Gemini:
+
+```bash
+automgr list-gemini-models
+```
+
+Gerar lote (várias versões) com Gemini:
+
+```bash
+automgr gemini-batch --count 3
+```
+
+### 2) Scripts (atalhos)
+
+Os arquivos em `scripts/` são apenas wrappers do CLI:
+
+```bash
+python scripts/main_api.py
+python scripts/main_openrouter.py
+python scripts/main_gemini.py
+python scripts/list_models.py
 ```
 
 ## Notas importantes
@@ -120,4 +143,3 @@ python list_models.py
 - **Custos e limites**: chamadas de API são pagas; revise modelo, `max_tokens` e tamanho do prompt antes de rodar em lotes.
 - **Segurança**: não comite `.env` e evite salvar prompts/respostas com dados sensíveis fora do necessário.
 - **Aderência ao TR/ETP**: o conteúdo final depende diretamente da qualidade/estrutura de `dados.json` e do template em `prompt_template.txt`.
-
