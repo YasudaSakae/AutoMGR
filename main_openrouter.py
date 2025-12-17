@@ -12,7 +12,6 @@ ARQUIVO_PROMPT = "prompt_template.txt"
 MARCA_SEPARADOR = "___SEPARADOR___"
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 
-# Configurações de Segurança da API
 TIMEOUT_SEGUNDOS = 120  # Espera no máximo 2 minutos por resposta
 MAX_TOKENS = 4000       # Trava para evitar gastos infinitos se a IA surtar
 TENTATIVAS_MAX = 3      # Quantas vezes tentar se der erro

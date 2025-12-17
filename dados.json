@@ -11,64 +11,74 @@
   },
   "etp_conteudo": {
     "numero_etp": "42/2025",
-    "descricao_necessidade": "A Prefeitura enfrenta desafios operacionais na movimentação interna de bens. A ausência de equipe dedicada impacta a logística. Necessita-se de serviço de carregadores sob demanda para carga, descarga e organização.",
+    "descricao_necessidade": "A Prefeitura enfrenta desafios operacionais na movimentação interna de bens, mobiliários e arquivos. A ausência de equipe dedicada impacta a logística e a preservação do patrimônio. Necessita-se de serviço de carregadores sob demanda para carga, descarga, layouts de eventos e organização de almoxarifados.",
     "requisitos": [
-      "Profissionais capacitados e uniformizados.",
-      "Atendimento flexível (sob demanda) em até 2 horas para urgências.",
-      "Uso de equipamentos adequados (carrinhos, paleteiras).",
-      "Garantia de integridade dos materiais."
+      "Profissionais capacitados (CBO compatível) e uniformizados.",
+      "Atendimento flexível (sob demanda) com SLA de acionamento rápido.",
+      "Fornecimento de equipamentos de movimentação (carrinhos, paleteiras, cintas ergonômicas).",
+      "Cumprimento rigoroso das normas de segurança (NR-11 e NR-17).",
+      "Garantia de integridade dos materiais transportados."
     ],
-    "justificativa_inviabilidade_outras_solucoes": "Equipe interna geraria altos encargos e desvio de função. Automação (robôs) inviável por custo e infraestrutura antiga.",
+    "justificativa_inviabilidade_outras_solucoes": "A criação de cargos efetivos para esta função é onerosa e gera rigidez administrativa (desvio de função). A automação total é inviável devido à diversidade de locais antigos e não padronizados da Prefeitura.",
     "estimativa_preco": 15919020.00,
     "riscos_preliminares": [
-      "Passivo trabalhista.",
-      "Danos ao patrimônio durante transporte.",
-      "Atraso no atendimento da demanda pontual."
+      "Passivo trabalhista solidário.",
+      "Acidentes de trabalho por falta de EPI.",
+      "Danos ao patrimônio histórico ou mobiliário durante transporte.",
+      "Indisponibilidade de equipe em datas de alta demanda (eventos)."
     ]
   },
   "tr_conteudo": [
     {
-      "secao": "1. Condições Gerais da Contratação",
+      "secao": "1. Definição do Objeto e Escopo",
       "itens": [
-        "1.1. O objeto é a contratação de serviços de carregadores sob demanda para movimentação interna de bens, equipamentos e materiais, incluindo carga, descarga, transporte vertical/horizontal e organização de layout.",
-        "1.2. O prazo de vigência da contratação é de 12 (doze) meses, contados da assinatura do contrato, prorrogável por iguais períodos até o limite de 10 anos (Lei 14.133/2021).",
-        "1.3. O valor estimado total da contratação é de R$ 15.919.020,00 (quinze milhões, novecentos e dezenove mil e vinte reais).",
-        "1.4. O regime de execução será de Empreitada por Preço Unitário, conforme demanda solicitada pela Administração."
+        "1.1. Contratação de empresa especializada para prestação de serviços continuados de movimentação interna e externa de bens, compreendendo: carga e descarga de caminhões, transporte vertical e horizontal de mobiliário, montagem de layout para eventos, transporte de caixas de arquivo e materiais de consumo.",
+        "1.2. O regime de execução será de Empreitada por Preço Unitário (sob demanda), mensurado por Homem-Hora (H/h) ou Diária de Posto, conforme Planilha de Preços.",
+        "1.3. O valor estimado anual é de R$ 15.919.020,00, não havendo obrigatoriedade da Administração em contratar o total licitado, pagando-se apenas pelo serviço efetivamente executado.",
+        "1.4. Prazo de vigência: 12 (doze) meses, podendo ser prorrogado até 10 anos (Art. 107 da Lei 14.133/2021), condicionado à vantajosidade econômica."
       ]
     },
     {
-      "secao": "2. Justificativa e Especificações Técnicas",
+      "secao": "2. Especificações Técnicas e Operacionais",
       "itens": [
-        "2.1. A contratação justifica-se pela ausência de quadro de pessoal próprio para atividades de carga e descarga, visando liberar servidores para atividades finalísticas.",
-        "2.2. Os serviços deverão ser executados nas instalações da Prefeitura Municipal de São Paulo ou outros locais indicados na Ordem de Serviço.",
-        "2.3. Horário de execução: Segunda a sexta-feira, das 08h às 18h, podendo haver demandas extraordinárias em finais de semana.",
-        "2.4. A Contratada deverá fornecer todos os equipamentos necessários: paleteiras manuais, carrinhos plataforma, cintas de elevação e EPIs completos."
+        "2.1. A Contratada deverá fornecer mão de obra qualificada para esforço físico, observando os limites de peso da NR-17 (Ergonomia).",
+        "2.2. Perfil dos Profissionais: Carregadores com aptidão física comprovada (ASO em dia) e Encarregado/Líder para coordenação das equipes em campo.",
+        "2.3. Equipamentos Obrigatórios (Inclusos no Preço): Paleteiras hidráulicas manuais, carrinhos de plataforma (capacidade min. 300kg), cintas de elevação, ferramentas básicas de desmontagem e EPIs completos (bota biqueira reforçada, luvas pigmentadas, cinto lombar).",
+        "2.4. Logística: A Contratada é responsável pelo transporte/deslocamento dos seus funcionários até os locais de execução indicados nas Ordens de Serviço (OS) em toda a cidade de São Paulo."
       ]
     },
     {
       "secao": "3. Obrigações da Contratada",
       "itens": [
-        "3.1. Disponibilizar efetivo qualificado, devidamente uniformizado (com identificação da empresa) e treinado em segurança do trabalho.",
-        "3.2. Atender às solicitações de serviço (Chamados) no prazo máximo de 2 (duas) horas para demandas emergenciais e 24 (vinte e quatro) horas para demandas ordinárias.",
-        "3.3. Responsabilizar-se integralmente por quaisquer danos causados aos bens móveis, imóveis e equipamentos da Contratante durante a execução dos serviços.",
-        "3.4. Manter preposto aceito pela Administração para representar a empresa durante a execução do contrato."
+        "3.1. Disponibilizar canais de comunicação (e-mail/telefone/WhatsApp) funcionais 24h para recebimento de demandas urgentes.",
+        "3.2. Substituir, no prazo máximo de 2 (duas) horas, qualquer funcionário que falte, apresente conduta inadequada ou não esteja devidamente uniformizado.",
+        "3.3. Responsabilizar-se civil e criminalmente por danos causados ao patrimônio da PMSP ou de terceiros, devendo repor o bem ou ressarcir o valor em até 30 dias.",
+        "3.4. Manter a regularidade fiscal, trabalhista e previdenciária durante toda a vigência contratual, apresentando comprovantes mensais junto à Fatura.",
+        "3.5. Garantir treinamento semestral sobre levantamento de peso e segurança no trabalho para todos os colaboradores."
       ]
     },
     {
-      "secao": "4. Gestão e Fiscalização (ANS/SLA)",
+      "secao": "4. Acordo de Nível de Serviço (ANS/SLA)",
       "itens": [
-        "4.1. A fiscalização técnica avaliará a qualidade mensalmente através do IMR (Instrumento de Medição de Resultado).",
-        "4.2. Indicador 1: Tempestividade no Atendimento. Meta: 100% dos chamados atendidos no prazo. Glosa: 1% sobre a fatura mensal por ocorrência.",
-        "4.3. Indicador 2: Integridade dos Bens. Meta: 0 danos. Glosa: Ressarcimento do valor do bem + multa de 5%.",
-        "4.4. Indicador 3: Uso de Uniformes e EPIs. Meta: 100% da equipe. Glosa: 0,5% por trabalhador irregular."
+        "4.1. O pagamento será vinculado ao IMR (Instrumento de Medição de Resultado). Notas abaixo de 80% acarretarão retenção cautelar.",
+        "4.2. Indicador 1 (Pontualidade): Chegada da equipe no local designado na OS. Meta: 100%. Tolerância: 15 min. Glosa: 2% do valor da OS por atraso superior à tolerância.",
+        "4.3. Indicador 2 (Efetividade/Uniforme): Funcionários completos e com EPI/Uniforme. Meta: 100%. Glosa: 1% por funcionário irregular.",
+        "4.4. Indicador 3 (Integridade): Ocorrência de danos a bens. Meta: Zero. Penalidade: Ressarcimento imediato + Multa de 10% sobre o valor do serviço do dia."
       ]
     },
     {
-      "secao": "5. Sanções Administrativas",
+      "secao": "5. Critérios de Medição e Pagamento",
       "itens": [
-        "5.1. Pela inexecução total ou parcial do objeto, a Contratada estará sujeita às sanções previstas na Lei nº 14.133/2021.",
-        "5.2. Multa moratória de 0,5% (cinco décimos por cento) por dia de atraso injustificado no início da prestação dos serviços.",
-        "5.3. Multa compensatória de 10% (dez por cento) sobre o valor total do contrato em caso de inexecução total."
+        "5.1. A medição será mensal, baseada nas Ordens de Serviço (OS) emitidas e devidamente atestadas pelo fiscal setorial.",
+        "5.2. O pagamento será efetuado em até 30 (trinta) dias contados da data final do período de adimplemento, mediante apresentação de Nota Fiscal e Relatório de Execução.",
+        "5.3. Não serão pagos serviços realizados sem prévia emissão de OS, salvo casos de emergência comprovada e ratificada pela autoridade competente."
+      ]
+    },
+    {
+      "secao": "6. Sanções e Sustentabilidade",
+      "itens": [
+        "6.1. Infrações sujeitas às sanções do Art. 156 da Lei 14.133/2021, incluindo advertência, multa compensatória de até 30% e declaração de inidoneidade.",
+        "6.2. Critério de Sustentabilidade: A Contratada deverá priorizar o uso de veículos com baixa emissão de carbono para o transporte da equipe e utilizar materiais de embalagem recicláveis quando aplicável."
       ]
     }
   ]
