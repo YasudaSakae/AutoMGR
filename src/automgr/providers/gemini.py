@@ -23,6 +23,34 @@ def _safe_name(model_name: str) -> str:
     return model_name.split("/")[-1].replace("-", "_").replace(".", "")
 
 
+def list_models(*, only_gemini: bool = True) -> list[str]:
+    load_dotenv()
+    api_key = os.getenv("GOOGLE_API_KEY")
+    if not api_key:
+        print("⚠️ [Gemini] Não foi possível listar: GOOGLE_API_KEY não encontrada.")
+        return []
+
+    try:
+        import google.generativeai as genai
+    except ImportError:
+        print("❌ [Gemini] Dependência ausente: instale com `pip install google-generativeai`.")
+        return []
+
+    try:
+        genai.configure(api_key=api_key)
+        models: list[str] = []
+        for model in genai.list_models():
+            if "generateContent" not in model.supported_generation_methods:
+                continue
+            if only_gemini and not model.name.startswith("models/gemini"):
+                continue
+            models.append(model.name)
+        return sorted(set(models))
+    except Exception as exc:  # noqa: BLE001
+        print(f"❌ [Gemini] Erro ao listar modelos: {exc}")
+        return []
+
+
 def run(
     system_prompt: str,
     user_prompt: str,

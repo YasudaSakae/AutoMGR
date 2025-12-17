@@ -7,6 +7,37 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 
+DEFAULT_MODELS = [
+    "llama-3.3-70b-versatile",
+    "llama-3.1-8b-instant",
+    "mixtral-8x7b-32768",
+]
+
+
+def list_models() -> list[str]:
+    load_dotenv()
+    api_key = os.getenv("GROQ_API_KEY")
+    if not api_key:
+        print("⚠️ [Groq] Não foi possível listar: GROQ_API_KEY não encontrada.")
+        return []
+
+    try:
+        from groq import Groq
+    except ImportError:
+        print("❌ [Groq] Dependência ausente: instale com `pip install groq`.")
+        return []
+
+    try:
+        client = Groq(api_key=api_key)
+        response = client.models.list()
+        models = [m.id for m in response.data if getattr(m, "id", None)]
+        models = sorted(set(models))
+        return models
+    except Exception as exc:  # noqa: BLE001
+        print(f"❌ [Groq] Erro ao listar modelos (usando lista padrão): {exc}")
+        return DEFAULT_MODELS
+
+
 def run(
     system_prompt: str,
     user_prompt: str,
@@ -68,4 +99,3 @@ def run(
             time.sleep(2)
 
     return None
-

@@ -96,6 +96,12 @@ Roda Gemini + Groq + OpenAI em sequência:
 automgr run
 ```
 
+Roda em modo interativo (lista modelos e deixa você escolher):
+
+```bash
+automgr run --select-models
+```
+
 Saídas típicas:
 
 - `outputs/prompt_montado_debug.txt`
@@ -109,6 +115,12 @@ Executa OpenRouter (menu interativo):
 automgr openrouter
 ```
 
+Executa OpenRouter com lista completa de modelos (interativo, pode ser grande):
+
+```bash
+automgr openrouter --select-model
+```
+
 Executa OpenRouter direto por slug:
 
 ```bash
@@ -119,6 +131,15 @@ Listar modelos do Gemini:
 
 ```bash
 automgr list-gemini-models
+```
+
+Listar modelos por provider (com filtro):
+
+```bash
+automgr models --provider gemini --filter 2.5
+automgr models --provider groq
+automgr models --provider openai --filter gpt-4o
+automgr models --provider openrouter --filter deepseek
 ```
 
 Gerar lote (várias versões) com Gemini:
@@ -142,4 +163,4 @@ python scripts/list_models.py
 
 - **Custos e limites**: chamadas de API são pagas; revise modelo, `max_tokens` e tamanho do prompt antes de rodar em lotes.
 - **Segurança**: não comite `.env` e evite salvar prompts/respostas com dados sensíveis fora do necessário.
-- **Aderência ao TR/ETP**: o conteúdo final depende diretamente da qualidade/estrutura de `dados.json` e do template em `prompt_template.txt`.
+- **Aderência ao TR/ETP**: o conteúdo final depende diretamente da qualidade/estrutura de `inputs/dados.json` e do template em `inputs/prompt_template.txt`.

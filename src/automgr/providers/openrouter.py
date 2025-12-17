@@ -34,6 +34,38 @@ DEFAULT_MODELS: dict[str, dict[str, str]] = {
     },
 }
 
+DEFAULT_MODELS_FLAT = sorted({info["slug"] for info in DEFAULT_MODELS.values()})
+
+
+def list_models() -> list[str]:
+    load_dotenv()
+    api_key = os.getenv("OPENROUTER_API_KEY")
+    if not api_key:
+        print("⚠️ [OpenRouter] Não foi possível listar: OPENROUTER_API_KEY não encontrada.")
+        return []
+
+    try:
+        from openai import OpenAI
+    except ImportError:
+        print("❌ [OpenRouter] Dependência ausente: instale com `pip install openai`.")
+        return []
+
+    try:
+        client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=api_key)
+        response = client.models.list(
+            extra_headers={
+                "HTTP-Referer": "https://automgr.local",
+                "X-Title": "AutoMGR Script",
+            }
+        )
+        data = getattr(response, "data", response)
+        ids = [getattr(item, "id", None) for item in data]
+        models = sorted({model_id for model_id in ids if model_id})
+        return models
+    except Exception as exc:  # noqa: BLE001
+        print(f"❌ [OpenRouter] Erro ao listar modelos (usando lista padrão): {exc}")
+        return DEFAULT_MODELS_FLAT
+
 
 def _safe_name(model_slug: str) -> str:
     return model_slug.split("/")[-1].replace("-", "_").replace(".", "")
@@ -164,4 +196,3 @@ def run_menu(
 
     print("Opção inválida.")
     return []
-
