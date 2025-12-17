@@ -1,0 +1,75 @@
+{
+  "metadados": {
+    "ORGAO_UNIDADE": "Prefeitura Municipal de São Paulo",
+    "NUM_PROCESSO": "SEI 4699452 (ETP 42/2025)",
+    "MODALIDADE": "Pregão Eletrônico",
+    "OBJETO_RESUMO": "Serviços de carregadores sob demanda, carga e descarga e movimentação interna.",
+    "VALOR_ESTIMADO": "R$ 15.919.020,00",
+    "PRAZO": "12 (doze) meses",
+    "LOCAL": "Instalações da PMSP e locais indicados em Ordem de Serviço",
+    "OBSERVACOES": "Mão de obra dedicada, inclui equipamentos (paleteiras/carrinhos)."
+  },
+  "etp_conteudo": {
+    "numero_etp": "42/2025",
+    "descricao_necessidade": "A Prefeitura enfrenta desafios operacionais na movimentação interna de bens. A ausência de equipe dedicada impacta a logística. Necessita-se de serviço de carregadores sob demanda para carga, descarga e organização.",
+    "requisitos": [
+      "Profissionais capacitados e uniformizados.",
+      "Atendimento flexível (sob demanda) em até 2 horas para urgências.",
+      "Uso de equipamentos adequados (carrinhos, paleteiras).",
+      "Garantia de integridade dos materiais."
+    ],
+    "justificativa_inviabilidade_outras_solucoes": "Equipe interna geraria altos encargos e desvio de função. Automação (robôs) inviável por custo e infraestrutura antiga.",
+    "estimativa_preco": 15919020.00,
+    "riscos_preliminares": [
+      "Passivo trabalhista.",
+      "Danos ao patrimônio durante transporte.",
+      "Atraso no atendimento da demanda pontual."
+    ]
+  },
+  "tr_conteudo": [
+    {
+      "secao": "1. Condições Gerais da Contratação",
+      "itens": [
+        "1.1. O objeto é a contratação de serviços de carregadores sob demanda para movimentação interna de bens, equipamentos e materiais, incluindo carga, descarga, transporte vertical/horizontal e organização de layout.",
+        "1.2. O prazo de vigência da contratação é de 12 (doze) meses, contados da assinatura do contrato, prorrogável por iguais períodos até o limite de 10 anos (Lei 14.133/2021).",
+        "1.3. O valor estimado total da contratação é de R$ 15.919.020,00 (quinze milhões, novecentos e dezenove mil e vinte reais).",
+        "1.4. O regime de execução será de Empreitada por Preço Unitário, conforme demanda solicitada pela Administração."
+      ]
+    },
+    {
+      "secao": "2. Justificativa e Especificações Técnicas",
+      "itens": [
+        "2.1. A contratação justifica-se pela ausência de quadro de pessoal próprio para atividades de carga e descarga, visando liberar servidores para atividades finalísticas.",
+        "2.2. Os serviços deverão ser executados nas instalações da Prefeitura Municipal de São Paulo ou outros locais indicados na Ordem de Serviço.",
+        "2.3. Horário de execução: Segunda a sexta-feira, das 08h às 18h, podendo haver demandas extraordinárias em finais de semana.",
+        "2.4. A Contratada deverá fornecer todos os equipamentos necessários: paleteiras manuais, carrinhos plataforma, cintas de elevação e EPIs completos."
+      ]
+    },
+    {
+      "secao": "3. Obrigações da Contratada",
+      "itens": [
+        "3.1. Disponibilizar efetivo qualificado, devidamente uniformizado (com identificação da empresa) e treinado em segurança do trabalho.",
+        "3.2. Atender às solicitações de serviço (Chamados) no prazo máximo de 2 (duas) horas para demandas emergenciais e 24 (vinte e quatro) horas para demandas ordinárias.",
+        "3.3. Responsabilizar-se integralmente por quaisquer danos causados aos bens móveis, imóveis e equipamentos da Contratante durante a execução dos serviços.",
+        "3.4. Manter preposto aceito pela Administração para representar a empresa durante a execução do contrato."
+      ]
+    },
+    {
+      "secao": "4. Gestão e Fiscalização (ANS/SLA)",
+      "itens": [
+        "4.1. A fiscalização técnica avaliará a qualidade mensalmente através do IMR (Instrumento de Medição de Resultado).",
+        "4.2. Indicador 1: Tempestividade no Atendimento. Meta: 100% dos chamados atendidos no prazo. Glosa: 1% sobre a fatura mensal por ocorrência.",
+        "4.3. Indicador 2: Integridade dos Bens. Meta: 0 danos. Glosa: Ressarcimento do valor do bem + multa de 5%.",
+        "4.4. Indicador 3: Uso de Uniformes e EPIs. Meta: 100% da equipe. Glosa: 0,5% por trabalhador irregular."
+      ]
+    },
+    {
+      "secao": "5. Sanções Administrativas",
+      "itens": [
+        "5.1. Pela inexecução total ou parcial do objeto, a Contratada estará sujeita às sanções previstas na Lei nº 14.133/2021.",
+        "5.2. Multa moratória de 0,5% (cinco décimos por cento) por dia de atraso injustificado no início da prestação dos serviços.",
+        "5.3. Multa compensatória de 10% (dez por cento) sobre o valor total do contrato em caso de inexecução total."
+      ]
+    }
+  ]
+}
