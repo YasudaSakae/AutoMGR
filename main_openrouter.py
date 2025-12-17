@@ -1,6 +1,5 @@
 import json
 import os
-import time  # <--- Adicionado para o delay entre tentativas
 from openai import OpenAI
 from dotenv import load_dotenv
 
@@ -12,39 +11,45 @@ ARQUIVO_PROMPT = "prompt_template.txt"
 MARCA_SEPARADOR = "___SEPARADOR___"
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 
-TIMEOUT_SEGUNDOS = 120  # Espera no máximo 2 minutos por resposta
-MAX_TOKENS = 4000       # Trava para evitar gastos infinitos se a IA surtar
-TENTATIVAS_MAX = 3      # Quantas vezes tentar se der erro
+TIMEOUT_SEGUNDOS = 600
+MAX_TOKENS = 16000
+TENTATIVAS_MAX = 3
 
+# === LISTA DE MODELOS (ATUALIZADA) ===
 MODELOS_DISPONIVEIS = {
     "1": {
-        "nome": "DeepSeek V3 (Recomendado)",
+        "nome": "DeepSeek V3 (Custo-Benefício)",
         "slug": "deepseek/deepseek-chat",
-        "desc": "O 'Rei' do custo-benefício. Inteligência nível GPT-4 custando centavos."
+        "desc": "O equilíbrio perfeito. Inteligência de ponta com preço baixo."
     },
     "2": {
-        "nome": "Qwen 2.5 72B Instruct",
+        "nome": "Qwen 2.5 72B Instruct (O Mais Barato)",
         "slug": "qwen/qwen-2.5-72b-instruct",
-        "desc": "Modelo da Alibaba. Excelente para seguir instruções técnicas e JSON."
+        "desc": "Modelo da Alibaba. Imbatível em preço para tarefas de formatação/JSON."
     },
     "3": {
         "nome": "Llama 3.3 70B (Meta)",
         "slug": "meta-llama/llama-3.3-70b-instruct",
-        "desc": "Muito estável e confiável. Ótimo padrão de mercado."
+        "desc": "O padrão do mercado ocidental. Muito estável."
     },
     "4": {
         "nome": "DeepSeek R1 (Raciocínio)",
         "slug": "deepseek/deepseek-r1",
-        "desc": "Modelo que 'pensa' passo-a-passo. Use para encontrar erros lógicos no ETP."
+        "desc": "Pensa antes de responder. Use para lógica complexa."
     },
     "5": {
-        "nome": "Mistral Small 3 (Europa)",
-        "slug": "mistralai/mistral-small-24b-instruct-2501",
-        "desc": "Lançamento recente (2025). Muito barato e surpreendentemente inteligente para lógica."
+        "nome": "Kimi K2 Thinking (Raciocínio)",
+        "slug": "moonshotai/kimi-k2-thinking",
+        "desc": "Modelo chinês que 'pensa' passo-a-passo. Ótimo para contextos longos."
+    },
+    "6": {
+        "nome": "Kimi K2 Standard (Rápido)",
+        "slug": "moonshotai/kimi-k2",
+        "desc": "Versão padrão do Kimi. Mais rápida e estável que a versão Thinking."
     }
 }
 
-# --- 3. FUNÇÕES DE DADOS ---
+# --- FUNÇÕES DE DADOS (Mantidas) ---
 CHAVES_IGNORAR = ["id", "fk_processo", "active", "order", "code", "created_at", "updated_at"]
 
 def carregar_montar_prompt():
@@ -76,8 +81,7 @@ def carregar_montar_prompt():
 
     return sys_txt, user_txt
 
-# --- 4. FUNÇÃO DE CHAMADA (Melhorada) ---
-# --- 4. FUNÇÃO DE CHAMADA (Com Streaming/Efeito Datilografia) ---
+# --- FUNÇÃO DE CHAMADA (CORRIGIDA) ---
 def chamar_ia(modelo_info, system_prompt, user_prompt):
     print(f"\n🚀 Iniciando conexão com: {modelo_info['nome']}")
     print(f"   Slug: {modelo_info['slug']}")
@@ -91,58 +95,72 @@ def chamar_ia(modelo_info, system_prompt, user_prompt):
         api_key=OPENROUTER_API_KEY,
     )
 
-    # Variável para acumular o texto completo para salvar no arquivo depois
+    # Lógica inteligente para definir parâmetros
+    # Se for modelo de raciocínio (Kimi Thinking, R1), NÃO usa penalidade de repetição
+    is_reasoning_model = "thinking" in modelo_info['slug'] or "r1" in modelo_info['slug']
+
+    params = {
+        "model": modelo_info['slug'],
+        "messages": [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_prompt},
+        ],
+        "temperature": 0.6 if is_reasoning_model else 0.2, # Raciocínio precisa de mais "liberdade"
+        "max_tokens": MAX_TOKENS,
+        "timeout": TIMEOUT_SEGUNDOS,
+        "stream": True
+    }
+
+    # Só adiciona penalidade se NÃO for modelo de raciocínio
+    if not is_reasoning_model:
+        params["frequency_penalty"] = 0.3
+        params["presence_penalty"] = 0.3
+
     texto_completo = ""
 
     try:
-        print("⏳ Aguardando primeira resposta (pode demorar uns segundos)...\n")
-        print("-" * 40) # Linha visual para separar
+        if is_reasoning_model:
+            print("🧠 Modelo de raciocínio detectado: Ajustando parâmetros para evitar travamento...")
 
-        # Ativamos o stream=True aqui
+        print("⏳ Aguardando resposta...\n")
+        print("-" * 40)
+
         stream = client.chat.completions.create(
             extra_headers={
                 "HTTP-Referer": "https://automgr.local",
                 "X-Title": "AutoMGR Script",
             },
-            model=modelo_info['slug'],
-            messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": user_prompt},
-            ],
-            temperature=0.2,
-            max_tokens=4000,
-            timeout=120,
-            stream=True  # <--- A MÁGICA ACONTECE AQUI
+            **params # Desempacota os parâmetros configurados acima
         )
 
-        # Loop que processa cada "pedacinho" (chunk) que chega
         for chunk in stream:
             if chunk.choices[0].delta.content is not None:
                 pedaco = chunk.choices[0].delta.content
-                print(pedaco, end="", flush=True) # Imprime sem pular linha
+                print(pedaco, end="", flush=True)
                 texto_completo += pedaco
 
-        print("\n" + "-" * 40) # Pula linha ao final e fecha a separação visual
+        print("\n" + "-" * 40)
 
-        # Salva o arquivo com o texto acumulado
-        safe_name = modelo_info['slug'].split("/")[-1].replace("-", "_").replace(".", "")
-        filename = f"resultado_{safe_name}.md"
+        if not texto_completo.strip():
+            print("\n⚠️ AVISO: O modelo retornou uma resposta vazia.")
+        else:
+            safe_name = modelo_info['slug'].split("/")[-1].replace("-", "_").replace(".", "")
+            filename = f"resultado_{safe_name}.md"
 
-        with open(filename, "w", encoding="utf-8") as f:
-            f.write(texto_completo)
+            with open(filename, "w", encoding="utf-8") as f:
+                f.write(texto_completo)
 
-        print(f"\n✅ Sucesso! Resposta salva em '{filename}'")
+            print(f"\n✅ Sucesso! Resposta salva em '{filename}'")
 
     except Exception as e:
         print(f"\n❌ Erro durante a geração: {e}")
 
-# --- 5. EXECUÇÃO ---
 if __name__ == "__main__":
     sys, user = carregar_montar_prompt()
 
     if sys and user:
         print(f"📝 Prompt pronto ({len(user)} caracteres).")
-        print("\n=== MENU CUSTO-BENEFÍCIO (OPENROUTER) ===")
+        print("\n=== MENU ATUALIZADO (6 OPÇÕES) ===")
         for k, v in MODELOS_DISPONIVEIS.items():
             print(f"{k}) {v['nome']}")
 
