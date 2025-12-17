@@ -1,13 +1,48 @@
 {
   "metadados": {
+    "MAX_RISCOS": 10,
     "ORGAO_UNIDADE": "Prefeitura Municipal de São Paulo",
     "NUM_PROCESSO": "SEI 4699452 (ETP 42/2025)",
+    "NOME_PROJETO_SOLUCAO": "Contratação de Serviços de Movimentação e Carga",
     "MODALIDADE": "Pregão Eletrônico",
     "OBJETO_RESUMO": "Serviços de carregadores sob demanda, carga e descarga e movimentação interna.",
     "VALOR_ESTIMADO": "R$ 15.919.020,00",
     "PRAZO": "12 (doze) meses",
     "LOCAL": "Instalações da PMSP e locais indicados em Ordem de Serviço",
-    "OBSERVACOES": "Mão de obra dedicada, inclui equipamentos (paleteiras/carrinhos)."
+    "OBSERVACOES": "Mão de obra dedicada, inclui equipamentos (paleteiras/carrinhos).",
+    "LOCAL_DOCUMENTO": "São Paulo",
+    "MES_EXTENSO": "Março",
+    "ANO": "2025",
+    "VERSAO": "1.0",
+    "AUTOR": "Equipe de Planejamento",
+
+    "IR_NOME": "João da Silva",
+    "IR_CARGO": "Chefe de Logística",
+    "IR_MATRICULA": "123.456-7",
+
+    "IT_NOME": "Maria Oliveira",
+    "IT_CARGO": "Analista de Gestão",
+    "IT_MATRICULA": "987.654-3",
+
+    "IA_NOME": "Carlos Souza",
+    "IA_CARGO": "Diretor Administrativo",
+    "IA_MATRICULA": "111.222-3",
+
+    "FR_NOME": "Ana Pereira",
+    "FR_CARGO": "Fiscal Requisitante",
+    "FR_MATRICULA": "444.555-6",
+
+    "FT_NOME": "Pedro Santos",
+    "FT_CARGO": "Fiscal Técnico",
+    "FT_MATRICULA": "777.888-9",
+
+    "FA_NOME": "Lucia Costa",
+    "FA_CARGO": "Fiscal Administrativo",
+    "FA_MATRICULA": "000.111-2",
+
+    "GC_NOME": "Roberto Lima",
+    "GC_CARGO": "Gestor do Contrato",
+    "GC_MATRICULA": "333.222-1"
   },
   "etp_conteudo": {
     "numero_etp": "42/2025",
