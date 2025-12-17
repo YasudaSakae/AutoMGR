@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # 2. Pega a chave usando a biblioteca OS
-CHAVE_GOOGLE = os.getenv("CHAVE_GOOGLE")
+CHAVE_GOOGLE = os.getenv("GOOGLE_API_KEY")
 
 if not CHAVE_GOOGLE:
     print("❌ Erro: A variável CHAVE_GOOGLE não foi encontrada no arquivo .env")

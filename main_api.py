@@ -1,5 +1,6 @@
 import json
 import os
+import time  # <--- Necessário para o delay entre tentativas
 import google.generativeai as genai
 from groq import Groq
 from openai import OpenAI
@@ -18,6 +19,7 @@ CHAVE_OPENAI = os.getenv("OPENAI_API_KEY")
 
 CHAVES_IGNORAR = ["id", "fk_processo", "active", "order", "code", "created_at", "updated_at"]
 
+# --- FUNÇÕES UTILITÁRIAS ---
 def carregar_arquivos():
     print(f"📂 Lendo arquivos '{ARQUIVO_DADOS}' e '{ARQUIVO_PROMPT}'...")
     if not os.path.exists(ARQUIVO_DADOS) or not os.path.exists(ARQUIVO_PROMPT):
@@ -62,63 +64,154 @@ def montar_prompt(dados, template_bruto):
 
     return system_txt, user_txt
 
-# --- 4. FUNÇÕES DAS APIS ---
+# --- 4. FUNÇÕES DAS APIS (COM STREAMING E RETRY) ---
 
 def chamar_gemini(system, user):
-    print("\n🔵 [Google] Tentando Gemini...")
-    if not CHAVE_GOOGLE: return print("⚠️ Pulei: GOOGLE_API_KEY não encontrada no .env")
+    print("\n" + "="*50)
+    print("🔵 [Google] Iniciando Gemini PRO...")
+
+    if not CHAVE_GOOGLE:
+        return print("⚠️ Pulei: GOOGLE_API_KEY não encontrada.")
 
     genai.configure(api_key=CHAVE_GOOGLE)
 
-    modelos_para_tentar = ["gemini-2.0-flash", "gemini-2.0-flash-lite", "gemini-flash-latest", "gemini-pro"]
+    # Prioridade para o modelo 2.5 e 1.5 Pro
+    modelos_para_tentar = [
+        "models/gemini-2.5-pro",
+        "models/gemini-1.5-pro",
+        "models/gemini-2.0-flash"
+    ]
 
     for modelo_nome in modelos_para_tentar:
+        print(f"   👉 Tentando modelo: {modelo_nome}")
         try:
-            print(f"   ...Tentando: {modelo_nome}")
-            model = genai.GenerativeModel(modelo_nome, system_instruction=system)
-            response = model.generate_content(user)
-            with open("resultado_gemini.md", "w", encoding="utf-8") as f: f.write(response.text)
-            print(f"✅ Sucesso! Salvo em 'resultado_gemini.md'")
-            return
+            config_seguranca = [
+                {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE"},
+                {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE"},
+                {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_NONE"},
+                {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE"},
+            ]
+
+            model = genai.GenerativeModel(
+                modelo_nome,
+                system_instruction=system,
+                safety_settings=config_seguranca
+            )
+
+            print("   ⏳ Gerando resposta (Streaming)...")
+            # STREAMING ATIVADO
+            response_stream = model.generate_content(
+                user,
+                stream=True, # <--- AQUI
+                generation_config=genai.types.GenerationConfig(temperature=0.2)
+            )
+
+            texto_completo = ""
+            print("-" * 30)
+
+            for chunk in response_stream:
+                if chunk.text:
+                    print(chunk.text, end="", flush=True)
+                    texto_completo += chunk.text
+
+            print("\n" + "-" * 30)
+
+            with open("resultado_gemini.md", "w", encoding="utf-8") as f:
+                f.write(texto_completo)
+
+            print(f"\n✅ Sucesso! Salvo em 'resultado_gemini.md'")
+            return # Sai da função se der certo
+
         except Exception as e:
-            if "404" in str(e) or "not found" in str(e): continue
-            else: print(f"❌ Erro crítico Gemini: {e}"); return
+            if "404" in str(e) or "not found" in str(e):
+                continue # Tenta o próximo modelo silenciosamente
+            print(f"\n❌ Erro no Gemini ({modelo_nome}): {e}")
+            time.sleep(1) # Pequena pausa antes de tentar outro modelo
 
 def chamar_groq(system, user):
-    print("\n🟠 [Groq] Tentando Llama 3...")
-    if not CHAVE_GROQ: return print("⚠️ Pulei: GROQ_API_KEY não encontrada no .env")
-    try:
-        client = Groq(api_key=CHAVE_GROQ)
-        resp = client.chat.completions.create(
-            messages=[{"role": "system", "content": system}, {"role": "user", "content": user}],
-            model="llama-3.3-70b-versatile", temperature=0.2
-        )
-        content = resp.choices[0].message.content
-        with open("resultado_groq.md", "w", encoding="utf-8") as f: f.write(content)
-        print("✅ Sucesso! Salvo em 'resultado_groq.md'")
-    except Exception as e:
-        print(f"❌ Erro Groq: {e}")
+    print("\n" + "="*50)
+    print("🟠 [Groq] Iniciando Llama 3...")
+
+    if not CHAVE_GROQ:
+        return print("⚠️ Pulei: GROQ_API_KEY não encontrada.")
+
+    client = Groq(api_key=CHAVE_GROQ)
+
+    for tentativa in range(3): # Tenta 3 vezes
+        try:
+            stream = client.chat.completions.create(
+                messages=[{"role": "system", "content": system}, {"role": "user", "content": user}],
+                model="llama-3.3-70b-versatile",
+                temperature=0.2,
+                max_tokens=4000,
+                stream=True # <--- STREAMING
+            )
+
+            texto_completo = ""
+            print("   ⏳ Gerando resposta...")
+            print("-" * 30)
+
+            for chunk in stream:
+                if chunk.choices[0].delta.content:
+                    pedaco = chunk.choices[0].delta.content
+                    print(pedaco, end="", flush=True)
+                    texto_completo += pedaco
+
+            print("\n" + "-" * 30)
+
+            with open("resultado_groq.md", "w", encoding="utf-8") as f: f.write(texto_completo)
+            print("\n✅ Sucesso! Salvo em 'resultado_groq.md'")
+            return
+
+        except Exception as e:
+            print(f"\n⚠️ Erro Groq (Tentativa {tentativa+1}): {e}")
+            time.sleep(2)
 
 def chamar_openai(system, user):
-    print("\n🟢 [OpenAI] Tentando GPT-4o...")
-    if not CHAVE_OPENAI: return print("⚠️ Pulei: OPENAI_API_KEY não encontrada no .env")
-    try:
-        client = OpenAI(api_key=CHAVE_OPENAI)
-        resp = client.chat.completions.create(
-            messages=[{"role": "system", "content": system}, {"role": "user", "content": user}],
-            model="gpt-4o", temperature=0.2
-        )
-        content = resp.choices[0].message.content
-        with open("resultado_gpt4o.md", "w", encoding="utf-8") as f: f.write(content)
-        print("✅ Sucesso! Salvo em 'resultado_gpt4o.md'")
-    except Exception as e:
-        print(f"❌ Erro OpenAI: {e}")
+    print("\n" + "="*50)
+    print("🟢 [OpenAI] Iniciando GPT-4o...")
+
+    if not CHAVE_OPENAI:
+        return print("⚠️ Pulei: OPENAI_API_KEY não encontrada.")
+
+    client = OpenAI(api_key=CHAVE_OPENAI)
+
+    for tentativa in range(3):
+        try:
+            stream = client.chat.completions.create(
+                messages=[{"role": "system", "content": system}, {"role": "user", "content": user}],
+                model="gpt-4o",
+                temperature=0.2,
+                stream=True, # <--- STREAMING
+                frequency_penalty=0.3 # Evita repetições
+            )
+
+            texto_completo = ""
+            print("   ⏳ Gerando resposta...")
+            print("-" * 30)
+
+            for chunk in stream:
+                if chunk.choices[0].delta.content:
+                    pedaco = chunk.choices[0].delta.content
+                    print(pedaco, end="", flush=True)
+                    texto_completo += pedaco
+
+            print("\n" + "-" * 30)
+
+            with open("resultado_gpt4o.md", "w", encoding="utf-8") as f: f.write(texto_completo)
+            print("\n✅ Sucesso! Salvo em 'resultado_gpt4o.md'")
+            return
+
+        except Exception as e:
+            print(f"\n⚠️ Erro OpenAI (Tentativa {tentativa+1}): {e}")
+            time.sleep(2)
 
 # --- 5. EXECUÇÃO ---
 
 if __name__ == "__main__":
-    print("--- INICIANDO AUTOMGR (Modo Seguro .env) ---")
+    print("--- INICIANDO AUTOMGR (Modo Multi-Provider) ---")
     dados_json, template_txt = carregar_arquivos()
+
     if dados_json and template_txt:
         sys_msg, user_msg = montar_prompt(dados_json, template_txt)
 
@@ -126,8 +219,9 @@ if __name__ == "__main__":
         with open(ARQUIVO_DEBUG, "w", encoding="utf-8") as f:
             f.write(f"=== SYSTEM ===\n{sys_msg}\n\n=== USER ===\n{user_msg}")
 
-        # Executa
+        # Chama um por um
         chamar_gemini(sys_msg, user_msg)
         chamar_groq(sys_msg, user_msg)
         chamar_openai(sys_msg, user_msg)
-        print("\n🏁 Fim.")
+
+        print("\n🏁 Fim de todas as execuções.")
